@@ -14,13 +14,17 @@ import com.example.cleanshopapp.domain.model.main.ShopItem
 import com.example.cleanshopapp.presentation.adapter.ShopItemAdapter
 import com.example.cleanshopapp.presentation.adapter.ShopItemAdapter.Companion.VIEW_TYPE_DISABLED
 import com.example.cleanshopapp.presentation.adapter.ShopItemAdapter.Companion.VIEW_TYPE_ENABLED
+import com.example.cleanshopapp.presentation.ui.ShopItemActivity.Companion.newAddIntent
+import com.example.cleanshopapp.presentation.ui.ShopItemActivity.Companion.newEditIntent
 import com.example.cleanshopapp.presentation.viewmodel.main.MainViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var shopItemAdapter: ShopItemAdapter
+    private lateinit var floatingActionButton: FloatingActionButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 
         recyclerView = findViewById(R.id.rv_shop_list)
+        floatingActionButton = findViewById(R.id.button_add_shop_item)
         shopItemAdapter = ShopItemAdapter()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
@@ -38,7 +43,10 @@ class MainActivity : AppCompatActivity() {
             shopItemAdapter.submitList(it)
         }
 
-
+        floatingActionButton.setOnClickListener {
+            val intent = newAddIntent(this)
+            startActivity(intent)
+        }
 
         applyingData()
         itemTouchHelperCallBack(recyclerView)
@@ -78,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         shopItemAdapter.apply {
             onShopItemClickListener = {
-                Toast.makeText(this@MainActivity, "${it.name}", Toast.LENGTH_SHORT).show()
+                val intent = newEditIntent(this@MainActivity, shopItemId = it.id)
+                startActivity(intent)
             }
             onShopItemLongClickListener = {
                 val item = it.copy(isEnabled = !it.isEnabled)
