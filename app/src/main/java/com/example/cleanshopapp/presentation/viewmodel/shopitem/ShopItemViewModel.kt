@@ -68,6 +68,16 @@ class ShopItemViewModel : ViewModel() {
         }
     }
 
+    fun resetInputNameError()
+    {
+        _errorInputName.value = false
+    }
+
+    fun resetInputCountError()
+    {
+        _errorInputCount.value = false
+    }
+
     private fun checkInputName(input_name: String?):String
     {
         return input_name?.trim() ?: ""
@@ -101,6 +111,8 @@ class ShopItemViewModel : ViewModel() {
 
         return result
     }
+
+
 
     private fun closeActivity()
     {
