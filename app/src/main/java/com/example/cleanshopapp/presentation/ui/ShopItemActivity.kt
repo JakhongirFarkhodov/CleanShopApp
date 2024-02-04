@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cleanshopapp.R
 import com.example.cleanshopapp.domain.model.main.ShopItem
 import com.example.cleanshopapp.domain.model.main.ShopItem.Companion.UNDEFINED_ID
+import com.example.cleanshopapp.presentation.ui.ShopItemFragment.Companion.newAddFragment
+import com.example.cleanshopapp.presentation.ui.ShopItemFragment.Companion.newEditFragment
 import com.example.cleanshopapp.presentation.viewmodel.shopitem.ShopItemViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -21,14 +23,6 @@ class ShopItemActivity : AppCompatActivity() {
     private var screen_mode = SCREEN_MODE
     private var shopItemId = UNDEFINED_ID
 
-    private lateinit var tilName:TextInputLayout
-    private lateinit var tilCount:TextInputLayout
-    private lateinit var tieName:TextInputEditText
-    private lateinit var tieCount:TextInputEditText
-
-    private lateinit var viewModel: ShopItemViewModel
-    private lateinit var save_button:MaterialButton
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,111 +30,59 @@ class ShopItemActivity : AppCompatActivity() {
 
         parseIntent()
 
-        tilName = findViewById(R.id.til_name)
-        tilCount = findViewById(R.id.til_count)
-        tieName = findViewById(R.id.et_name)
-        tieCount = findViewById(R.id.et_count)
-        save_button = findViewById(R.id.save_button)
+        if (savedInstanceState == null) {
+            launchFragment()
+        }
 
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 
-        when(screen_mode)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("TAG", "ShopItemActivity onStart: ")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("TAG", "ShopItemActivity onPause: ")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("TAG", "ShopItemActivity onStop: ")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("TAG", "ShopItemActivity onRestart: ")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("TAG", "ShopItemActivity onResume: ")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("TAG", "ShopItemActivity onDestroy: ")
+    }
+
+    private fun launchFragment() {
+        val fragment = when(screen_mode)
         {
             MODE_ADD ->{
-                launchAddMode()
+                newAddFragment()
             }
             MODE_EDIT ->{
-                launchEditMode()
+                newEditFragment(shopItemId = shopItemId)
+            }
+            else ->{
+                throw RuntimeException("Cannot find screen mode")
             }
         }
 
-        viewModel.shopItem.observe(this){
-            val name = it.name
-            val count = it.count.toString()
-            tieName.setText(name)
-            tieCount.setText(count)
-        }
-
-        viewModel.errorInputName.observe(this){
-            if (it)
-            {
-                tilName.error = getString(R.string.error_input_name)
-            }
-            else{
-                tilName.error = null
-            }
-        }
-
-        viewModel.errorInputCount.observe(this){
-            if (it)
-            {
-                tilCount.error = getString(R.string.error_input_count)
-            }
-            else{
-                tilCount.error = null
-            }
-        }
-
-        viewModel.shouldCloseActivity.observe(this){
-            finish()
-        }
-
-
-        save_button.setOnClickListener {
-            val name = tieName.text.toString()
-            val count = tieCount.text.toString()
-            when(screen_mode)
-            {
-                MODE_ADD ->{
-                    viewModel.addShopItem(name, count)
-                }
-                MODE_EDIT ->{
-                    viewModel.editShopItem(name, count)
-                }
-            }
-        }
-
-
-
-
-    }
-
-    private fun launchAddMode() {
-        checkTextChange()
-    }
-
-    private fun launchEditMode() {
-        checkTextChange()
-        viewModel.getShopItemById(shopItemId = shopItemId)
-    }
-
-    private fun checkTextChange() {
-        tieName.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetInputNameError()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
-
-        tieCount.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetInputCountError()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        })
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, fragment).commit()
     }
 
     private fun parseIntent()
@@ -167,7 +109,6 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
     }
-
 
     companion object{
         private const val EXTRA_STRING_VALUE = "EXTRA_VALUE"

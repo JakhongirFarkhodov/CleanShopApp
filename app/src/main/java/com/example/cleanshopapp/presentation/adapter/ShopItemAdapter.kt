@@ -19,7 +19,7 @@ class ShopItemAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
 
-        Log.d("TAG", "onCreateViewHolder: ${count++}")
+//        Log.d("TAG", "onCreateViewHolder: ${count++}")
 
         val layout = when (viewType) {
             VIEW_TYPE_ENABLED -> R.layout.item_shop_enabled
