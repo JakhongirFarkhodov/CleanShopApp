@@ -18,7 +18,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnBackPressClickListener {
 
     private var screen_mode = SCREEN_MODE
     private var shopItemId = UNDEFINED_ID
@@ -130,5 +130,9 @@ class ShopItemActivity : AppCompatActivity() {
                 putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
             }
         }
+    }
+
+    override fun onOnBackPressed() {
+        finish()
     }
 }

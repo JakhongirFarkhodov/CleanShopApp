@@ -29,11 +29,18 @@ class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var save_button: MaterialButton
+    private lateinit var onBackPressClickListener: OnBackPressClickListener
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
+        if (context is OnBackPressClickListener)
+        {
+            onBackPressClickListener = context
+        }
+        else{
+            throw RuntimeException("Activity $context must implement OnBackPressClickListener")
+        }
         Log.d("TAG", "onAttach: ShopItemFragment" + " ${requireArguments().hashCode()}")
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +113,7 @@ class ShopItemFragment : Fragment() {
         }
 
         viewModel.shouldCloseActivity.observe(viewLifecycleOwner){
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            onBackPressClickListener.onOnBackPressed()
         }
 
 
@@ -249,6 +256,10 @@ class ShopItemFragment : Fragment() {
                 }
             }
         }
+    }
+
+    interface OnBackPressClickListener{
+        fun onOnBackPressed()
     }
 
 }
