@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CleanShopApp</string>
+    <string name="add_shop_item_content_description" />
 </resources>
